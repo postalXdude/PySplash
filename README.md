@@ -9,7 +9,7 @@ https://github.com/niklasb/dryscrape
 
 ## Usage examples
 ``` python
-from py_splash import Driver
+from py_splash.driver import Driver
 
 splash_driver = Driver()
 
@@ -23,14 +23,22 @@ splash_url = splash_driver.wait_for_condition(url=url, condition=condition)
 ```
 
 In example above lua script is generated and added to splash_url as query param.
-That url contains all info needed for splash to wait for desired html tags that are in added in condition.
-For detailed info go to **PySplash/py_splash/driver.py** .
+That url contains all info needed for splash to wait for desired html tags that are added in condition.
 
 ## Requirements
 Latest splash version and any version of python after 2.7 .
 
+## Installation
+```pip install py_splash```
+
 ## ToDo
-- add an option to wait for certain url
-- option to set cookies
-- option to set headers
-- option to send post data
+- add an option to wait for certain url (if possible)
+- add simple `go` method that will just go to page and won't wait for any condition
+- add methods for get and post request that will not load page content into browser
+
+## Docs
+For now there is no docs. <br />
+For detailed info go to **PySplash/py_splash/driver.py** .
+
+## Changelog
+[click_me_baby xD](./CHANGELOG.md)
