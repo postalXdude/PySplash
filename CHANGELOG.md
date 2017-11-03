@@ -1,6 +1,12 @@
 # PySplash changelog
 
-## 0.2
+## 0.2.1
+
+2017-11-03
+
+### Update README.md and splash_url fix
+
+# 0.2
 
 2017-10-29
 
@@ -12,7 +18,7 @@
 - Add option to set user-agent
 - Prepare repo for PYPI
 
-## 0.1
+# 0.1
 
 2017-10-21
 
