@@ -1,5 +1,11 @@
 # PySplash changelog
 
+### 0.2.1
+
+2017-11-03
+
+### Update README.md and splash_url fix
+
 ## 0.2
 
 2017-10-29

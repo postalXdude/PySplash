@@ -29,7 +29,7 @@ That url contains all info needed for splash to wait for desired html tags that 
 Latest splash version and any version of python after 2.7 .
 
 ## Installation
-```pip install py_splash```
+```pip install py-splash```
 
 ## ToDo
 - add an option to wait for certain url (if possible)
@@ -38,7 +38,7 @@ Latest splash version and any version of python after 2.7 .
 
 ## Docs
 For now there is no docs. <br />
-For detailed info go to **PySplash/py_splash/driver.py** .
+For detailed info go to [here](./py_splash/driver.py) .
 
 ## Changelog
 [click_me_baby xD](./CHANGELOG.md)

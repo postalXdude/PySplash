@@ -15,14 +15,14 @@ from .static import (
 
 
 class Driver(object):
-    def __init__(self, splash_url='http://localhost:8050/execute', user_agent=None):
+    def __init__(self, splash_url='http://localhost:8050', user_agent=None):
         """
         :param splash_url:  Url to target running splash container. It can be on local or external machine.
                             Defaults to local machine.
         :param user_agent:  Sets user agent in the headers. It must be string.
         (optional)          It is used until this object cease to exists.
         """
-        self.splash_url = splash_url
+        self.splash_url = '{}/execute'.format(splash_url)
         self.user_agent = user_agent
 
     def wait_for_condition(self, url=None, condition=None, timeout=20, wait=0.5,
