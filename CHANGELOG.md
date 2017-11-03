@@ -1,10 +1,11 @@
 # PySplash changelog
 
-## 0.2.1
+## 0.2.1, 0.2.2
 
 2017-11-03
 
-### Update README.md and splash_url fix
+- Update README.md and splash_url fix
+- Bug fix: escape char for lua literal in POST body
 
 # 0.2
 

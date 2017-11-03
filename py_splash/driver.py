@@ -96,7 +96,7 @@ class Driver(object):
             form_data = False
             body = '''
                     local body = [[{}]]
-            '''.format(post)
+            '''.format(post.replace('[', '\\[').replace(']', '\\]'))
             prepared_data.append(body)
 
         if type(headers) is dict and headers:
