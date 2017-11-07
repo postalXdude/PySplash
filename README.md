@@ -19,7 +19,7 @@ condition = [
     "//a[@href='PySplash']"
 ]
 
-splash_url = splash_driver.wait_for_condition(url=url, condition=condition)
+url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
 ```
 
 In example above lua script is generated and added to splash_url as query param.
