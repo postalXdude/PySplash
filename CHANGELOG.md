@@ -1,5 +1,14 @@
 # PySplash changelog
 
+# 0.3
+
+2017-11-08
+
+### Add support for adding proxy
+
+- Add new param backup_wait
+- Minor fixes
+
 ## 0.2.1, 0.2.2
 
 2017-11-03

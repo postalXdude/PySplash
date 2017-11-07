@@ -16,6 +16,8 @@ LUA_SOURCE = '''
                         ]])
                     end
 
+{}
+
                     local html = splash:html()
 {}
 
@@ -63,4 +65,12 @@ PREPARE_COOKIES = '''
                     splash:init_cookies({}
 {}
                      {})
+'''
+
+SET_PROXY = '''
+                    splash:on_request(function(request)
+                        request:set_proxy{}
+{}
+                        {}
+                    end)
 '''
