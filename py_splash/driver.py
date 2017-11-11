@@ -79,11 +79,16 @@ class Driver(object):
         if full_info:
             return_data = RETURN_ALL_DATA
 
+        js_start = '{}document.evaluate('.format('\t' * 6) if type(condition) is list \
+            else '{}(function(){}'.format('\t' * 6, '{')
+        js_end = '{}).booleanValue'.format('\t' * 6) if type(condition) is list \
+            else '{}{})();'.format('\t' * 6, '}')
+
         lua_source = LUA_SOURCE.format(
             prepared_data,
-            '{}document.evaluate('.format('\t' * 6) if type(condition) is list else '',
+            js_start,
             condition_source,
-            '{}).booleanValue'.format('\t' * 6) if type(condition) is list else '',
+            js_end,
             '{}splash:wait({})'.format('\t' * 5, backup_wait) if backup_wait else '',
             GET_ALL_DATA if full_info else '',
             return_data

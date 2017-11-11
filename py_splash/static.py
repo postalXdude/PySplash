@@ -35,7 +35,7 @@ GO = '{}assert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method=
 USER_AGENT = '{}splash:set_user_agent("{}")'.format('\t' * 5, '{}')
 
 JS_PIECE = '''
-                            "{}",
+                            `{}`,
                             document,
                             null,
                             XPathResult.BOOLEAN_TYPE,

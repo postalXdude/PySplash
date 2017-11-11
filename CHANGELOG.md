@@ -1,5 +1,13 @@
 # PySplash changelog
 
+## 0.3.1
+
+2017-11-12
+
+- Update README.md, add new example
+- Bug fix: xpath condition can now be in single quote string
+- When custom javascript is in condition anonymous self calling function is called
+
 # 0.3
 
 2017-11-08
