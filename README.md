@@ -33,21 +33,13 @@ splash_driver = Driver()
 
 url = 'random_url'
 condition = '''
-var table = document.getElementById("forecast-table");
-var cells = table.getElementsByTagName("td");
-
-condition = false;
-
-for (var i = 0; i < cells.length; i++) {
-    var status = cells[i].getAttribute("data-status");
-    if ( status == "open" ) {
-        // check if something exists, if exists set condition to true
-        condition = true;
-        break;
-    }
+link = document.getElementsByClassName("icon-flight-bookings").item('icon-flight-bookings');
+if (link !== null) {
+    link.click()
+    return true;
 }
 
-return condition;
+return false;
 '''
 
 url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
@@ -56,6 +48,8 @@ url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
 Same as first example, except in this case javascript is used as condition.
 This can be used for specific cases when it is impossible to wait for tags in html.
 For example, wait for certain cookie to initialize, header, etc.
+Unfortunately brackets [] can't be used in js code because of lua literal ([[]]).
+For more complex cases when array and brackets are needed use custom lua script.
 
 ## Requirements
 Latest splash version and any version of python after 2.7 .
@@ -65,7 +59,6 @@ Latest splash version and any version of python after 2.7 .
 
 ## ToDo
 - add an option to wait for certain url (if possible)
-- add methods for get and post request that will not load page content into browser
 
 ## Docs
 For now there is no docs. <br />

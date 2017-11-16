@@ -71,7 +71,9 @@ class Driver(object):
             condition_source = '\n'.join(condition_source)
             condition_source = condition_source[:condition_source.rfind('\n')]
         elif type(condition) is str and condition:
-            condition_source = condition.replace('[', '\\[').replace(']', '\\]')
+            if '[' in condition or ']' in condition:
+                raise ValueError('Use custom lua script or remove brackets [] !')
+            condition_source = condition
         else:
             raise ValueError("Function must receive a list of xpath expressions or custom js code!")
 
@@ -143,8 +145,8 @@ class Driver(object):
             prepared_data.append(headers)
 
         if type(cookies) is dict and cookies:
-            table_values = ['{}{}name="{}", value="{}"{},'.format(
-                '\t' * 6, '{', name.replace('"', '\\"'), value.replace('"', '\\"'), '}'
+            table_values = ['{}{}name="{}", value=[[{}]]{},'.format(
+                '\t' * 6, '{', name.replace('"', '\\"'), value.replace('[', '\\[').replace(']', '\\]'), '}'
             )
                 for name, value in cookies.items()]
 
@@ -171,8 +173,8 @@ class Driver(object):
                      {}
                     '''
 
-        table_values = ['{}["{}"] = "{}",'.format(
-            '\t' * 6, name.replace('"', '\\"'), value.replace('"', '\\"')
+        table_values = ['{}["{}"] = [[{}]],'.format(
+            '\t' * 6, name.replace('"', '\\"'), value.replace('[', '\\[').replace(']', '\\]')
         )
             for name, value in data.items()]
 
