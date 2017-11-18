@@ -48,8 +48,14 @@ url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
 Same as first example, except in this case javascript is used as condition.
 This can be used for specific cases when it is impossible to wait for tags in html.
 For example, wait for certain cookie to initialize, header, etc.
-Unfortunately brackets [] can't be used in js code because of lua literal ([[]]).
-For more complex cases when array and brackets are needed use custom lua script.
+Unfortunately brackets [] can't be used in js code because of lua literal [[]].
+You can bypass that with example bellow using eval.
+``` javascript
+x = [1 , 2];
+l = String.fromCharCode(91);
+r = String.fromCharCode(93);
+eval(`x${l}0${r}`);
+```
 
 ## Requirements
 Latest splash version and any version of python after 2.7 .
