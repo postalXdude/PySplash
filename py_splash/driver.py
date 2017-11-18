@@ -41,7 +41,6 @@ class Driver(object):
         """
         :param url:         Url for splash to target desired resource.
         :param condition:   List of xpath expressions ["//td[@class='splash']", etc.] on which splash will wait.
-                            Xpath expression must be inside double quotes "". !!!
                             Or it can be custom js code. It needs to return True or False.
                             If never fulfilled, timeout occurs.
         :param timeout:     Amount of time in seconds, until splash stops loading page and throws timeout error.
@@ -72,7 +71,7 @@ class Driver(object):
             condition_source = condition_source[:condition_source.rfind('\n')]
         elif type(condition) is str and condition:
             if '[' in condition or ']' in condition:
-                raise ValueError('Use custom lua script or remove brackets [] !')
+                raise ValueError('Instead brackets [] use eval() with example in README.md!')
             condition_source = condition
         else:
             raise ValueError("Function must receive a list of xpath expressions or custom js code!")

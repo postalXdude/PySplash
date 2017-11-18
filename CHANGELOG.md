@@ -1,8 +1,8 @@
 # PySplash changelog
 
-## 0.3.1, 0.3.2
+## 0.3.1, 0.3.2, 0.3.3
 
-2017-11-16
+2017-11-18
 
 - Update README.md, add new example
 - Bug fix: xpath condition can now be in single quote string
