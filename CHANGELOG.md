@@ -1,9 +1,12 @@
 # PySplash changelog
 
-## 0.3.1, 0.3.2, 0.3.3
+## 0.3.1, 0.3.2, 0.3.3, 0.3.4
 
-2017-11-18
+2017-12-24
 
+- replace lua literals with single quote strings
+- remove user_agent
+- update static.py
 - Update README.md, add new example
 - Bug fix: xpath condition can now be in single quote string
 - When custom javascript is in condition anonymous self calling function is called

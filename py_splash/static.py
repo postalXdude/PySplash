@@ -1,7 +1,6 @@
 LUA_SOURCE = '''
                 function main(splash)
                     splash.resource_timeout = splash.args.timeout
-                    splash.images_enabled = false
 
 {}
 
@@ -9,16 +8,11 @@ LUA_SOURCE = '''
 
                     while not condition do
                         splash:wait(splash.args.wait)
-                        condition = splash:evaljs([[
-{}
-{}
-{}
-                        ]])
+                        condition = splash:evaljs({}{}{})
                     end
 
 {}
 
-                    local html = splash:html()
 {}
 
                     splash:runjs("window.close()")
@@ -32,15 +26,7 @@ GO = '{}assert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method=
     *['\t' * 5] + ['{}'] * 6
 )
 
-USER_AGENT = '{}splash:set_user_agent("{}")'.format('\t' * 5, '{}')
-
-JS_PIECE = '''
-                            `{}`,
-                            document,
-                            null,
-                            XPathResult.BOOLEAN_TYPE,
-                            null
-                        ).booleanValue || document.evaluate('''
+JS_PIECE = '`{}`, document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
 
 GET_ALL_DATA = '''
                     local entries = splash:history()
@@ -64,7 +50,7 @@ RETURN_ALL_DATA = '''
 PREPARE_COOKIES = '''
                     splash:init_cookies({}
 {}
-                     {})
+                    {})
 '''
 
 SET_PROXY = '''

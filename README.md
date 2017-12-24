@@ -13,6 +13,17 @@ from py_splash.driver import Driver
 
 splash_driver = Driver()
 
+url_to_go = splash_driver.wait_for_condition(url=url, wait=5)
+```
+
+Rendering page for 5 seconds and returns result.
+
+---
+``` python
+from py_splash.driver import Driver
+
+splash_driver = Driver()
+
 url = 'random_url'
 condition = [
     "//div[@class='splash']",
@@ -22,7 +33,7 @@ condition = [
 url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
 ```
 
-In example above lua script is generated and added to splash_url as query param.
+In example above lua script is generated and added to url_to_go as query param.
 That url contains all info needed for splash to wait for desired html tags that are added in condition.
 
 ---
@@ -45,17 +56,9 @@ return false;
 url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
 ```
 
-Same as first example, except in this case javascript is used as condition.
+Same as the second example, except in this case javascript is used as condition.
 This can be used for specific cases when it is impossible to wait for tags in html.
 For example, wait for certain cookie to initialize, header, etc.
-Unfortunately brackets [] can't be used in js code because of lua literal [[]].
-You can bypass that with example bellow using eval.
-``` javascript
-x = [1 , 2];
-l = String.fromCharCode(91);
-r = String.fromCharCode(93);
-eval(`x${l}0${r}`);
-```
 
 ## Requirements
 Latest splash version and any version of python after 2.7 .
@@ -64,7 +67,7 @@ Latest splash version and any version of python after 2.7 .
 ```pip install py-splash```
 
 ## ToDo
-- add an option to wait for certain url (if possible)
+- take screenshot
 
 ## Docs
 For now there is no docs. <br />
