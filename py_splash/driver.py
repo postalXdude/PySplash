@@ -10,19 +10,15 @@ from .static import (
     PREPARE_COOKIES,
     JS_PIECE,
     SET_PROXY,
-    USER_AGENT,
     GO
 )
 
 
 class Driver(object):
-    def __init__(self, splash_url='http://localhost:8050', user_agent=None,
-                 proxy=None, proxy_user_pass=None, proxy_type=None):
+    def __init__(self, splash_url='http://127.0.0.1:8050', proxy=None, proxy_user_pass=None, proxy_type=None):
         """
         :param splash_url:      Url to target running splash container. It can be on local or external machine.
                                 Defaults to local machine.
-        :param user_agent:      Sets user agent in the headers. It must be string.
-        (optional)              It is used until this object cease to exists.
         :param proxy:           Proxy server that will be used by splash ('example.com:8080').
         (optional)
         :param proxy_user_pass: If the proxy server requires authentication, send username and password in this
@@ -31,18 +27,18 @@ class Driver(object):
         (optional)              It can be 'http' or 'HtTp'. Defaults to 'HTTP'.
         """
         self.splash_url = '{}/execute'.format(splash_url)
-        self.user_agent = user_agent
         self.proxy = proxy
         self.proxy_user_pass = proxy_user_pass
         self.proxy_type = proxy_type
 
-    def wait_for_condition(self, url=None, condition=None, timeout=20, wait=0.5, backup_wait=None,
+    def wait_for_condition(self, url=None, condition='no_condition', timeout=20, wait=0.5, backup_wait=None,
                            post=None, cookies=None, headers=None, full_info=False):
         """
         :param url:         Url for splash to target desired resource.
         :param condition:   List of xpath expressions ["//td[@class='splash']", etc.] on which splash will wait.
-                            Or it can be custom js code. It needs to return True or False.
+        (optional)          Or it can be custom js code. It needs to return True or False.
                             If never fulfilled, timeout occurs.
+                            If not set, defaults to True.
         :param timeout:     Amount of time in seconds, until splash stops loading page and throws timeout error.
         :param wait:        Amount of time in seconds, for how long will splash wait and
                             check if condition is fulfilled.
@@ -67,12 +63,14 @@ class Driver(object):
         if type(condition) is list and condition:
             condition_source = [condition_piece.format(xpath.replace('[', '\\[').replace(']', '\\]')).strip('\n')
                                 for xpath in condition]
-            condition_source = '\n'.join(condition_source)
-            condition_source = condition_source[:condition_source.rfind('\n')]
+            condition_source = ' '.join(condition_source)[:-22]
         elif type(condition) is str and condition:
-            if '[' in condition or ']' in condition:
-                raise ValueError('Instead brackets [] use eval() with example in README.md!')
-            condition_source = condition
+            if condition == 'no_condition':
+                condition_source = 'return true;'
+            else:
+                condition_pieces = condition.split('\n')
+                condition_pieces = [piece.strip() for piece in condition_pieces]
+                condition_source = ' '.join(condition_pieces).replace("'", "\\'")
         else:
             raise ValueError("Function must receive a list of xpath expressions or custom js code!")
 
@@ -80,18 +78,16 @@ class Driver(object):
         if full_info:
             return_data = RETURN_ALL_DATA
 
-        js_start = '{}document.evaluate('.format('\t' * 6) if type(condition) is list \
-            else '{}(function(){}'.format('\t' * 6, '{')
-        js_end = '{}).booleanValue'.format('\t' * 6) if type(condition) is list \
-            else '{}{})();'.format('\t' * 6, '}')
+        js_start = 'document.evaluate(' if type(condition) is list else '(function(){'
+        js_end = '' if type(condition) is list else '})();'
 
         lua_source = LUA_SOURCE.format(
             prepared_data,
-            js_start,
-            condition_source,
-            js_end,
+            '\'' if type(condition) is str else '[[',
+            '{} {} {}'.format(js_start, condition_source, js_end),
+            '\'' if type(condition) is str else ']]',
             '{}splash:wait({})'.format('\t' * 5, backup_wait) if backup_wait else '',
-            GET_ALL_DATA if full_info else '',
+            GET_ALL_DATA if full_info else '{}local html = splash:html()'.format('\t' * 5),
             return_data
         )
 
@@ -103,9 +99,14 @@ class Driver(object):
             quote_plus(str(wait))
         )
 
-    def _prepare_data_for_request(self, post, headers, cookies):
+    def _prepare_data_for_request(self, post, headers, cookies, images_enabled=False):
         prepared_data = []
         form_data = True
+
+        if images_enabled:
+            prepared_data.append('{}splash.images_enabled = true\n'.format('\t' * 5))
+        else:
+            prepared_data.append('{}splash.images_enabled = false\n'.format('\t' * 5))
 
         if self.proxy:
             proxy_init = []
@@ -126,17 +127,14 @@ class Driver(object):
 
             prepared_data.append(SET_PROXY.format('{', '\n'.join(proxy_init), '}'))
 
-        if self.user_agent:
-            prepared_data.append(USER_AGENT.format(self.user_agent))
-
         if type(post) is dict and post:
             post = Driver._prepare_lua_table('post', post)
             prepared_data.append(post)
         elif type(post) is str and post:
             form_data = False
             body = '''
-                    local body = [[{}]]
-            '''.format(post.replace('[', '\\[').replace(']', '\\]'))
+                    local body = '{}'
+            '''.format(post.replace("'", "\\'"))
             prepared_data.append(body)
 
         if type(headers) is dict and headers:
@@ -144,8 +142,12 @@ class Driver(object):
             prepared_data.append(headers)
 
         if type(cookies) is dict and cookies:
-            table_values = ['{}{}name="{}", value=[[{}]]{},'.format(
-                '\t' * 6, '{', name.replace('"', '\\"'), value.replace('[', '\\[').replace(']', '\\]'), '}'
+            table_values = ["{}{}name='{}', value='{}'{},".format(
+                '\t' * 6,
+                '{',
+                name.replace("'", "\\'"),
+                str(value).replace("'", "\\'") if value else '',
+                '}'
             )
                 for name, value in cookies.items()]
 
@@ -157,7 +159,7 @@ class Driver(object):
             '{',
             'headers' if headers else 'nil',
             'POST' if post else 'GET',
-            'body'.format(post) if post and not form_data else 'nil',
+            'body' if post and not form_data else 'nil',
             'post' if post and form_data else 'nil',
             '}'
         ))
@@ -169,11 +171,13 @@ class Driver(object):
         table_skeleton = '''
                     local {} = {}
 {}
-                     {}
+                    {}
                     '''
 
-        table_values = ['{}["{}"] = [[{}]],'.format(
-            '\t' * 6, name.replace('"', '\\"'), value.replace('[', '\\[').replace(']', '\\]')
+        table_values = ["{}['{}'] = '{}',".format(
+            '\t' * 6,
+            name.replace("'", "\\'"),
+            str(value).replace("'", "\\'") if value else '',
         )
             for name, value in data.items()]
 
