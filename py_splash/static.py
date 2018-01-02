@@ -26,7 +26,7 @@ GO = '{}assert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method=
     *['\t' * 5] + ['{}'] * 6
 )
 
-JS_PIECE = '`{}`, document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
+JS_PIECE = '"{}", document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
 
 GET_ALL_DATA = '''
                     local entries = splash:history()

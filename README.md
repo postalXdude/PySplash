@@ -68,6 +68,7 @@ Latest splash version and any version of python after 2.7 .
 
 ## ToDo
 - take screenshot
+- use javascript literal for xpath condition
 
 ## Docs
 For now there is no docs. <br />

@@ -1,9 +1,9 @@
 # PySplash changelog
 
-## 0.3.1, 0.3.2, 0.3.3, 0.3.4
+## 0.3.1, 0.3.2, 0.3.3, 0.3.4, 0.3.5
 
 2017-12-24
-
+- temporarily replace javascript literal for backwards compatibility
 - replace lua literals with single quote strings
 - remove user_agent
 - update static.py
