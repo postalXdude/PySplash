@@ -1,5 +1,14 @@
 # PySplash changelog
 
+## 0.4.1
+
+2018-01-06
+
+### Add extra data for more detailed exceptions
+
+- beautify lua source
+- minor hotfixes
+
 # 0.4
 
 2018-01-06
