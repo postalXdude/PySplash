@@ -22,11 +22,14 @@ LUA_SOURCE = '''
                 end
 '''
 
-GO = '{}assert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method="{}", body={}, formdata={}{})'.format(
-    *['\t' * 5] + ['{}'] * 6
-)
+GO = '{}assert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method="{}", body={}, formdata={}{})' \
+    .format(*['\t' * 5] + ['{}'] * 6)
 
-JS_PIECE = '"{}", document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
+JS_PIECE = '`{}`, document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
+
+GET_HTML_ONLY = '{}local html = splash:html()'.format('\t' * 5)
+
+RETURN_HTML_ONLY = '{}return html'.format('\t' * 5)
 
 GET_ALL_DATA = '''
                     local entries = splash:history()

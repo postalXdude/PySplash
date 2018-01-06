@@ -1,3 +1,6 @@
+import json
+import sys
+
 try:
     from urllib.parse import quote_plus
 except ImportError:
@@ -5,12 +8,23 @@ except ImportError:
 
 from .static import (
     LUA_SOURCE,
+    GET_HTML_ONLY,
     GET_ALL_DATA,
+    RETURN_HTML_ONLY,
     RETURN_ALL_DATA,
     PREPARE_COOKIES,
     JS_PIECE,
     SET_PROXY,
     GO
+)
+
+from .exceptions import (
+    SplashTimeoutError,
+    SplashInternalError,
+    SplashRenderError,
+    SplashUnsupportedContentTypeError,
+    SplashBadRequestError,
+    SplashSyntaxError
 )
 
 
@@ -74,10 +88,6 @@ class Driver(object):
         else:
             raise ValueError("Function must receive a list of xpath expressions or custom js code!")
 
-        return_data = '{}return html'.format('\t' * 5)
-        if full_info:
-            return_data = RETURN_ALL_DATA
-
         js_start = 'document.evaluate(' if type(condition) is list else '(function(){'
         js_end = '' if type(condition) is list else '})();'
 
@@ -87,8 +97,8 @@ class Driver(object):
             '{} {} {}'.format(js_start, condition_source, js_end),
             '\'' if type(condition) is str else ']]',
             '{}splash:wait({})'.format('\t' * 5, backup_wait) if backup_wait else '',
-            GET_ALL_DATA if full_info else '{}local html = splash:html()'.format('\t' * 5),
-            return_data
+            GET_ALL_DATA if full_info else GET_HTML_ONLY,
+            RETURN_ALL_DATA if full_info else RETURN_HTML_ONLY
         )
 
         return '{}?lua_source={}&url={}&timeout={}&wait={}'.format(
@@ -184,3 +194,41 @@ class Driver(object):
         table_values[-1] = table_values[-1].rstrip(',')
 
         return table_skeleton.format(data_type, '{', '\n'.join(table_values), '}')
+
+    @staticmethod
+    def error_check(response):
+        try:
+            potential_error = json.loads(response)
+        except ValueError:
+            potential_error = False
+
+        error_keys = ('info', 'type', 'description', 'error')
+        error = all(key in error_keys for key in potential_error.keys())
+
+        if error and potential_error:
+            if 'Timeout exceeded rendering page' in potential_error.get('description'):
+                raise SplashTimeoutError('Timeout exceeded rendering page')
+
+            elif 'Error rendering page' in potential_error.get('description'):
+                raise SplashRenderError('Error rendering page')
+
+            elif 'Unhandled internal error' in potential_error.get('description'):
+                raise SplashInternalError('Unhandled internal error')
+
+            elif 'Request Content-Type is not supported' in potential_error.get('description'):
+                raise SplashUnsupportedContentTypeError('Request Content-Type is not supported')
+
+            elif 'Error happened while executing Lua script' in potential_error.get('description'):
+                if potential_error.get('info').get('type', '').strip() == 'LUA_ERROR':
+                    raise SplashBadRequestError(potential_error.get('error'))
+
+                elif potential_error.get('info').get('type', '').strip() == 'LUA_INIT_ERROR':
+                    raise SplashSyntaxError('Lua syntax error')
+
+                elif potential_error.get('info').get('type', '').strip() == 'JS_ERROR':
+                    raise SplashSyntaxError('Syntax error in splash condition')
+                else:
+                    raise NotImplementedError(potential_error.get('info', response))
+
+            else:
+                raise NotImplementedError(response)

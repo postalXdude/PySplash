@@ -1,5 +1,13 @@
 # PySplash changelog
 
+# 0.4
+
+2018-01-06
+
+### Add Splash exceptions
+
+- add error_check func
+
 ## 0.3.1, 0.3.2, 0.3.3, 0.3.4, 0.3.5
 
 2017-12-24
