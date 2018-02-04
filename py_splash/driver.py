@@ -14,6 +14,7 @@ from .static import (
     PREPARE_COOKIES,
     JS_PIECE,
     SET_PROXY,
+    USER_AGENT,
     GO
 )
 
@@ -28,10 +29,13 @@ from .exceptions import (
 
 
 class Driver(object):
-    def __init__(self, splash_url='http://127.0.0.1:8050', proxy=None, proxy_user_pass=None, proxy_type=None):
+    def __init__(self, splash_url='http://127.0.0.1:8050', user_agent=None,
+                 proxy=None, proxy_user_pass=None, proxy_type=None):
         """
         :param splash_url:      Url to target running splash container. It can be on local or external machine.
                                 Defaults to local machine.
+        :param user_agent:      Sets user agent in the headers. It must be string.
+        (optional)              It is used until this object cease to exists.
         :param proxy:           Proxy server that will be used by splash ('example.com:8080').
         (optional)
         :param proxy_user_pass: If the proxy server requires authentication, send username and password in this
@@ -40,12 +44,13 @@ class Driver(object):
         (optional)              It can be 'http' or 'HtTp'. Defaults to 'HTTP'.
         """
         self.splash_url = '{}/execute'.format(splash_url)
+        self.user_agent = user_agent
         self.proxy = proxy
         self.proxy_user_pass = proxy_user_pass
         self.proxy_type = proxy_type
 
-    def wait_for_condition(self, url=None, condition='no_condition', timeout=20, wait=0.5, backup_wait=None,
-                           post=None, cookies=None, headers=None, full_info=False):
+    def load_url(self, url=None, condition='no_condition', timeout=20, wait=0.5, backup_wait=None,
+                 post=None, cookies=None, headers=None, full_info=False):
         """
         :param url:         Url for splash to target desired resource.
         :param condition:   List of xpath expressions ["//td[@class='splash']", etc.] on which splash will wait.
@@ -64,9 +69,10 @@ class Driver(object):
         (optional)
         :param headers:     Custom headers in form of dictionary that will be used in request.
         (optional)
-        :param full_info:   If set to True, function will return html, cookies, headers, current url, and status code.
-        (optional)
-        :return:            It can return page content or full_info.
+        :param full_info:   If set to True, extra data will be returned in form of JSON that contains:
+        (optional)          html, cookies, headers, current url, and status code.
+        :returns:           Generates url that will be sent to splash. When request is made with generated url,
+                            there are three possible responses: Html page, full info(see above) or error.
         """
         prepared_data = self._prepare_data_for_request(post, headers, cookies)
 
@@ -136,6 +142,9 @@ class Driver(object):
             proxy_init[-1] = proxy_init[-1].rstrip(',')
 
             prepared_data.append(SET_PROXY.format('{', '\n'.join(proxy_init), '}'))
+
+        if self.user_agent:
+            prepared_data.append(USER_AGENT.format(self.user_agent.replace("'", "\\'")))
 
         if isinstance(post, dict) and post:
             post = Driver._prepare_lua_table('post', post)

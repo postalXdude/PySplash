@@ -27,6 +27,8 @@ GO = '\tassert(splash:go{}splash.args.url, baseurl=nil, headers={}, http_method=
 
 JS_PIECE = '`{}`, document, null, XPathResult.BOOLEAN_TYPE, null).booleanValue || document.evaluate('
 
+USER_AGENT = '\tsplash:set_user_agent(\'{}\')'
+
 GET_HTML_ONLY = '\tlocal html = splash:html()'
 
 RETURN_HTML_ONLY = '\treturn html'
