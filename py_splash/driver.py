@@ -231,7 +231,7 @@ class Driver(object):
 
             elif 'Error happened while executing Lua script' in potential_error.get('description'):
                 if potential_error.get('info').get('type', '').strip() == 'LUA_ERROR':
-                    raise SplashBadRequestError(potential_error.get('error'))
+                    raise SplashBadRequestError(potential_error.get('info').get('error'))
 
                 elif potential_error.get('info').get('type', '').strip() == 'LUA_INIT_ERROR':
                     raise SplashSyntaxError('Lua syntax error')

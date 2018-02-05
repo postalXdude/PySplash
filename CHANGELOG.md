@@ -1,9 +1,10 @@
 # PySplash changelog
 
-## 0.4.1, 0.4.2, 0.4.3
+## 0.4.1, 0.4.2, 0.4.3, 0.4.4
 
 2018-02-04
 
+- error message hotfix
 - add user_agent as option in driver class
 - revert to basic exception messages
 - beautify lua source
