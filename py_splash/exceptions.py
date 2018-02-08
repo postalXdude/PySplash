@@ -1,6 +1,7 @@
 class SplashError(Exception):
     pass
 
+
 class SplashTimeoutError(SplashError):
     pass
 

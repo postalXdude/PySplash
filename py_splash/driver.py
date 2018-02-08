@@ -5,7 +5,7 @@ try:
 except ImportError:
     from urllib import quote_plus
 
-from .static import (
+from py_splash.static import (
     LUA_SOURCE,
     GET_HTML_ONLY,
     GET_ALL_DATA,
@@ -18,7 +18,7 @@ from .static import (
     GO
 )
 
-from .exceptions import (
+from py_splash.exceptions import (
     SplashTimeoutError,
     SplashInternalError,
     SplashRenderError,

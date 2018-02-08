@@ -13,7 +13,7 @@ from py_splash.driver import Driver
 
 splash_driver = Driver()
 
-url_to_go = splash_driver.wait_for_condition(url=url, wait=5)
+url_to_go = splash_driver.load_url(url=url, wait=5)
 ```
 
 Rendering page for 5 seconds and returns result.
@@ -30,7 +30,7 @@ condition = [
     "//a[@href='PySplash']"
 ]
 
-url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
+url_to_go = splash_driver.load_url(url=url, condition=condition)
 ```
 
 In example above lua script is generated and added to url_to_go as query param.
@@ -53,7 +53,7 @@ if (link !== null) {
 return false;
 '''
 
-url_to_go = splash_driver.wait_for_condition(url=url, condition=condition)
+url_to_go = splash_driver.load_url(url=url, condition=condition)
 ```
 
 Same as the second example, except in this case javascript is used as condition.
@@ -73,5 +73,4 @@ Latest splash version and any version of python after 2.7 .
 For now there is no docs. <br />
 For detailed info go to [here](./py_splash/driver.py) .
 
-## Changelog
-[click_me_baby xD](./CHANGELOG.md)
+## [Changelog](./CHANGELOG.md)
