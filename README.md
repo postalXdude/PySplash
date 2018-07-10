@@ -1,3 +1,5 @@
+# Not maintained anymore !!!
+
 # PySplash
 
 - Small interface for splash written in python.<br />
